@@ -39,5 +39,5 @@ git push
 
 1. 检查目标设备是否存在 `~/.config/opencode/opencode.json`
 2. 若无则创建，若有则确保包含上述 `instructions` 配置
-3. 确认 `~/.config/opencode/AGENTS.md` **不存在**（避免与远程规则冲突）
+3. `~/.config/opencode/AGENTS.md` 可保留作为本地补充，与远程规则合并生效
 4. 通知用户需要新开 opencode 会话才能生效
