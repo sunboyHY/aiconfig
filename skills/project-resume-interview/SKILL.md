@@ -1,56 +1,56 @@
 ---
 name: project-resume-interview
-description: Analyze a real software project and produce resume-ready highlights plus interview talking points. Use when the user asks to turn a project/codebase into 简历项目经历, 面试素材, 项目亮点, 八股/背诵稿, or requests market-oriented Agent/full-stack/front-end project packaging without inventing unsupported technical claims.
+description: 分析真实软件项目，产出可直接写入简历的项目经历，以及面试用的专项问答素材。适用于用户要求将项目转为简历项目经历、面试素材、项目亮点、八股/背诵稿等场景，不虚构技术栈、指标或所有权。
 ---
 
-# Project Resume Interview
+# 项目简历与面试
 
-## Overview
+## 概述
 
-Use this skill to convert an existing project into two matched career outputs:
+将现有项目转化为两份配套的职业文档输出：
 
-- **`01-简历精简版.md`** — 可直接复制到简历。含一句话项目简介 + 严格 1 行的 bullet。
-- **`02-面试专项详情版.md`** — 面试问答素材。每条对应简历版的一条 bullet，按「背景→方案→成果」展开。
+- **`01-简历精简版.md`** — 可直接复制到简历。含一句话项目简介 + 严格 1 行的条目。
+- **`02-面试专项详情版.md`** — 面试问答素材。每条对应简历版的一条条目，按「背景→方案→成果」展开。
 
-两个文件的关系：简历版 bullet 是面试版 sections 的摘要目录，面试版是简历版的深度展开。
+两个文件的关系：简历版条目是面试版各章节的摘要目录，面试版是简历版的深度展开。
 
-The core rule is evidence first: inspect actual source, docs, scripts, package metadata, routes, stores, services, components, and mocks before writing. Never invent technologies, optimizations, metrics, or ownership.
+核心原则：先看证据再动笔。检查源代码、文档、脚本、包元数据、路由、状态管理、服务、组件和模拟数据后再写。不虚构技术栈、优化指标、性能数据或项目所有权。
 
-## Workflow
+## 工作流程
 
-1. Inspect project context before drafting.
-2. Identify real project positioning, stack, modules, and user-facing value.
-3. Extract high-frequency interview topics from actual implementation.
-4. Draft two separate files, not one combined file.
-5. Mark any generated metric as an estimate and avoid unsupported precision.
-6. Verify output paths and briefly summarize what changed.
+1. 检查项目上下文后开始撰写。
+2. 明确项目的真实定位、技术栈、模块划分和用户价值。
+3. 从实际代码中提取高频面试话题。
+4. 分别撰写两个独立文件，不合并为一个文件。
+5. 任何量化指标标注为估算值，不编造不存在的精度。
+6. 确认输出路径，简要总结改动内容。
 
-## Evidence Collection
+## 证据收集
 
-Check these areas when available:
+检查以下领域（如有）：
 
-- `package.json`, README, `AGENTS.md`, project docs.
-- Routing and permission files.
-- Stores/session lifecycle.
-- API/request wrappers and generated API modules.
-- Agent/AI chat modules, WebSocket/SSE transports, mocks, replay scripts.
-- Core business pages and reusable components.
-- Build, lint, mock, commit, and automation scripts.
+- `package.json`、README、`AGENTS.md`、项目文档
+- 路由和权限文件
+- 状态管理 / 会话生命周期
+- API 请求封装和自动生成的 API 模块
+- Agent/AI 对话模块、WebSocket/SSE 传输、模拟数据、回放脚本
+- 核心业务页面和可复用组件
+- 构建、lint、模拟数据、提交、自动化脚本
 
-Prefer codegraph/explore/search tools for source discovery. Use subagents for independent research domains such as AI/Agent, frontend architecture, backend/API integration, visualization, and engineering setup.
+优先使用 codegraph/explore/search 工具发现源码。对独立调研领域（如 AI/Agent、前端架构、后端/API 集成、可视化、工程配置）可派发子 Agent 并行处理。
 
-## Output Files
+## 输出文件
 
-When the user gives an output directory, create a project-name subfolder and write:
+用户指定输出目录后，创建以项目名称命名的子文件夹，写入：
 
-- `01-简历精简版.md` — 可直接复制到简历，每条 bullet 严格 1 行，含项目简介行
+- `01-简历精简版.md` — 可直接复制到简历，每条条目严格 1 行，含项目简介行
 - `02-面试专项详情版.md` — 面试问答素材，按「背景→方案→成果」结构展开
 
-两个文件严格对应：简历版的每一条 bullet 对应详情版的一个 section。
+两个文件严格对应：简历版的每一条条目对应详情版的一个章节。
 
-If no output directory is provided, ask one short question for the destination.
+如果用户未提供输出目录，问一句目标路径即可。
 
-## Resume Version Rules（可直接写入简历）
+## 简历版规则（可直接写入简历）
 
 ### 整体结构
 
@@ -64,16 +64,16 @@ If no output directory is provided, ask one short question for the destination.
 
 {角色方向说明一行，如：偏向 Agent 全栈 / 后端 / 前端}
 
-1. {bullet}
-2. {bullet}
+1. {条目}
+2. {条目}
 ...
 ```
 
-### Bullet 规则
+### 条目规则
 
 - **严格 1 行**（30-50 汉字），禁止跨行。
 - **动词开头**，直接说做了什么。优先「封装/打通/构建/抽象/统一/优化/设计/实现」等单双字动词，杜绝「设计并实现了」。
-- **一个 bullet 只陈述一件事**，一个主谓结构到底。不要用「同时/此外/支持」挂载多个功能。
+- **一个条目只陈述一件事**，一个主谓结构到底。不要用「同时/此外/支持」挂载多个功能。
 - **方案名词 + 效果**：不说实现细节（如"基于工厂模式抽象 XXX 接口"），只说「工厂模式统一 N 家上游 API」。
 - **每句可独立回答「做了什么 + 怎么做的 + 效果如何」**。
 
@@ -85,71 +85,73 @@ If no output directory is provided, ask one short question for the destination.
 
 ### 措辞风格
 
-- **不留写作痕迹**：每条 bullet 都是可独立复制到简历的条目，不是讲解、不是介绍、不是说明文。
+- **不留写作痕迹**：每条条目都是可独立复制到简历的内容，不是讲解、不是介绍、不是说明文。
 - 技术名词保留但不解释（NestJS、BullMQ、JWT 等直接写）。
 - 避免「实现了/支持了/确保了」——这些在简历上是无效填充。
-- 根据 target role 调整 bullet 侧重方向（Agent 能力 / 前端工程 / 后端 API 的配比继承原有规则）。
+- 根据目标角色调整条目侧重方向（Agent 能力 / 前端工程 / 后端 API 的配比继承原有规则）。
 
 ### 与详情版的对应关系
 
-- 每条简历 bullet 对应详情版的一个 section。
-- 详情版的「简历对应行：」字段会原文引用 bullet 内容。
+- 每条简历条目对应详情版的一个章节。
+- 详情版的「简历对应行：」字段会原文引用条目内容。
 
-## Interview Version Rules
+## 面试详情版规则
 
-Use this fixed structure for each topic:
+每个话题使用以下固定结构：
 
 ```markdown
-## N. Topic Name
+## N. 话题标题
+
+- **简历对应行：** {引用简历版对应条目的原文}
 
 **① 原有问题：**  
-Describe the real business pain, complexity, bug risk, or engineering issue.
+描述实际业务痛点、复杂度、风险或工程问题。
 
 **② 实现方案：**  
-Explain the concrete implementation with file/module names and technical choices.
+说明具体实现，包含文件名/模块名和技术选型理由。
 
 **③ 落地成果：**  
-State the actual benefit. Mark estimates explicitly when no measured data exists.
+说明实际收益。无量化数据时明确标注为估算。
 ```
 
-Recommended topic categories:
+推荐的话题类别：
 
-- Agent streaming protocol and UI integration.
-- Agent context/session management.
-- Agent result to business UI/data visualization.
-- Complex frontend state and async cancellation.
-- Visualization/map/chart/canvas rendering if present.
-- Dynamic routing and permission.
-- CRUD/resource abstraction and data normalization.
-- Request/API wrapper and auth handling.
-- Store/session lifecycle and cleanup.
-- Theme/layout/component system.
-- Engineering, mock, replay, lint, build, and debugging workflow.
+- Agent 流式协议与 UI 集成
+- Agent 上下文/会话管理
+- Agent 结果到业务 UI/数据可视化
+- 复杂前端状态管理与异步取消
+- 可视化/地图/图表/Canvas 渲染（如有）
+- 动态路由与权限
+- CRUD/资源抽象与数据规范化
+- 请求封装与认证处理
+- 状态管理/会话生命周期与清理
+- 主题/布局/组件系统
+- 工程化、模拟数据、回放、lint、构建、调试工作流
 
-## Metrics Policy
+## 量化指标策略
 
-If the repository does not contain measured metrics, say so in the document.
+如果仓库中没有可测量的性能数据，在文档中明确说明。
 
-Allowed estimated wording:
+允许的估算措辞：
 
 - “估算：同类页面重复代码减少约 50%-70%。”
 - “估算：流式协议处理重复代码减少约 60%。”
 - “主要提升调试可复现性和交互可观察性。”
 
-Avoid unsupported wording:
+禁止的无依据措辞：
 
-- “首屏提升 xx%” without data.
-- “FPS 提升 xx%” without sampling.
-- “包体减少 xx%” without build comparison.
-- “QPS/并发/服务稳定性提升” unless backend evidence exists.
+- “首屏提升 xx%”（无实测数据）
+- “FPS 提升 xx%”（无采样数据）
+- “包体减少 xx%”（无构建对比）
+- “QPS/并发/服务稳定性提升”（无后端数据支撑）
 
-## Final Checks
+## 最终检查
 
-Before final response:
+每次回复前，确认：
 
-- Confirm two separate files exist.
-- Confirm the resume file follows the new rules: 项目简介行 + 严格 1 行 bullet + 精简措辞。
-- Confirm the resume file's bullets are NOT讲解/介绍/说明 style.
-- Confirm the interview file uses the required three-part structure.
-- Confirm all estimated metrics are labeled.
-- Mention if no build/test was run because only documents were changed.
+- 两个独立文件已生成
+- 简历版符合规则：项目简介行 + 严格 1 行条目 + 精简措辞
+- 简历版条目不是讲解/介绍/说明文风格
+- 面试版采用了三段式结构（问题→方案→成果）
+- 所有估算指标已标注
+- 如仅修改了文档文件，说明未运行构建/测试
