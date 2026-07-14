@@ -64,5 +64,5 @@ Instructions for the agent to follow.
 ## 优先级
 
 - **AGENTS.md**：全局基线，通过 `instructions` URL 注入所有会话
-- **skills/**：通过 `npx skills add -g` 安装到 `~/.claude/skills/`，opencode 自动发现
+- **skills/**：通过 `npx skills add -g` 安装到 `~/.agents/skills/`，opencode 自动发现
 - 项目根目录的 `AGENTS.md` 或 `.opencode/` 可作为项目级补充
