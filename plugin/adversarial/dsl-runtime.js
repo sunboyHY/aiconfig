@@ -1,7 +1,8 @@
 export class WorkflowRuntime {
-  constructor(sessionManager, directory) {
+  constructor(sessionManager, directory, modelCatalog = []) {
     this.sessionManager = sessionManager;
     this.directory = directory;
+    this.modelCatalog = modelCatalog;
     this.logs = [];
   }
 
@@ -10,6 +11,7 @@ export class WorkflowRuntime {
 
     const cleanScript = script.replace(/^export\s+/gm, '');
     const sessionManager = this.sessionManager;
+    const availableModels = this.modelCatalog.filter((m) => m.available);
 
     const phaseFn = (title) => {
       this.logs.push({ type: 'phase', title });
@@ -31,6 +33,8 @@ export class WorkflowRuntime {
       return await sessionManager.runPipeline(items, stages);
     };
 
+    const modelsFn = () => availableModels;
+
     const fnBody = `
       return (async () => {
         ${cleanScript}
@@ -38,8 +42,16 @@ export class WorkflowRuntime {
     `;
 
     const fn = new Function(
-      'agent', 'parallel', 'pipeline', 'phase', 'log', 'args',
-      'JSON', 'Math', 'Array',
+      'agent',
+      'parallel',
+      'pipeline',
+      'phase',
+      'log',
+      'models',
+      'args',
+      'JSON',
+      'Math',
+      'Array',
       fnBody
     );
 
@@ -49,6 +61,7 @@ export class WorkflowRuntime {
       pipelineFn,
       phaseFn,
       logFn,
+      modelsFn,
       args,
       JSON,
       Math,

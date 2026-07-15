@@ -1,7 +1,30 @@
 export class SessionManager {
-  constructor(client, directory) {
+  constructor(client, directory, modelCatalog = []) {
     this.client = client;
     this.directory = directory;
+    this.modelCatalog = modelCatalog;
+  }
+
+  _resolveModel(opts = {}) {
+    if (!opts.model) return null;
+    const { providerID, modelID } = opts.model;
+    const match = this.modelCatalog.find(
+      (m) =>
+        m.providerID === providerID &&
+        m.modelID === modelID &&
+        m.available
+    );
+    if (!match) {
+      const available = this.modelCatalog
+        .filter((m) => m.available)
+        .map((m) => `${m.providerID}/${m.modelID}`)
+        .join(', ');
+      throw new Error(
+        `Model ${providerID}/${modelID} not found or unavailable. ` +
+          `Available models: ${available || 'none detected'}`
+      );
+    }
+    return { providerID, modelID };
   }
 
   async runAgent(prompt, opts = {}) {
@@ -12,11 +35,9 @@ export class SessionManager {
     });
 
     const promptOpts = { prompt };
-    if (opts.model) {
-      promptOpts.model = {
-        providerID: opts.model.providerID,
-        modelID: opts.model.modelID,
-      };
+    const resolvedModel = this._resolveModel(opts);
+    if (resolvedModel) {
+      promptOpts.model = resolvedModel;
     }
     if (opts.agent) {
       promptOpts.agent = opts.agent;
