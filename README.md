@@ -1,12 +1,31 @@
-# OpenCode 全局配置
+# OpenCode 全局配置仓库
 
-本仓库托管 OpenCode 的全局规则和技能，跨设备共享。
+本仓库托管 `sunboyHY` 的 OpenCode 全局配置，跨设备同步。
 
-## 全局指令（AGENTS.md）
+**包含三个组件：**
+- `AGENTS.md` — 全局指令（注入所有 opencode 会话）
+- `skills/` — 可安装的技能
+- `agents/` — 自定义 primary agent
 
-通过远程 URL 注入到所有 opencode 会话。
+---
 
-在 **每台设备的全局配置文件** `~/.config/opencode/opencode.json` 中添加 `instructions` 字段：
+## 新设备配置（AI 执行顺序）
+
+收到本仓库 URL 后，按以下步骤操作：
+
+### 1. 检查 opencode 是否已安装
+
+```bash
+opencode --version
+```
+
+如果未安装，先安装 opencode。
+
+### 2. 全局指令（AGENTS.md）
+
+检查 `~/.config/opencode/opencode.json` 是否已有 `instructions` 字段指向本仓库的 AGENTS.md。
+
+如果不存在，添加：
 
 ```json
 {
@@ -17,69 +36,118 @@
 }
 ```
 
-所有规则集中在 `AGENTS.md`，修改提交推送即可全局生效。
+说明：AGENTS.md 通过 raw URL 注入，修改后 commit + push 即可全局生效，无需在各设备重复操作。
 
-## 技能（Skills）
+### 3. 安装技能（skills/）
 
-本仓库的技能可通过 [`npx skills`](https://github.com/vercel-labs/skills) 安装。
-
-### 安装方式
+确认 `npx skills` 可用，然后安装仓库中的所有技能：
 
 ```bash
-# 查看可用技能
-npx skills add sunboyHY/aiconfig --list
-
-# 安装指定技能到全局（opencode 自动发现）
-npx skills add sunboyHY/aiconfig --skill <skill-name> -g -y
+npx skills add sunboyHY/aiconfig --skill grilling -g -y
+npx skills add sunboyHY/aiconfig --skill mew-spec -g -y
+npx skills add sunboyHY/aiconfig --skill project-resume-interview -g -y
 ```
+
+查看已安装技能：
+
+```bash
+npx skills add sunboyHY/aiconfig --list
+```
+
+### 4. 安装代理（agents/）
+
+将 `agents/` 目录下的文件复制到本地 opencode agents 目录：
+
+| 平台 | 命令 |
+|------|------|
+| macOS / Linux | `cp agents/autonomous.md ~/.config/opencode/agents/` |
+| Windows (PowerShell) | `Copy-Item -Path agents\autonomous.md -Destination ~\.config\opencode\agents\ -Force` |
+
+如果 `~/.config/opencode/agents/` 目录不存在，先创建。
+
+---
+
+## 仓库结构
+
+```
+aiconfig/
+├── AGENTS.md              # 全局指令（规则、回复格式、行为约束）
+├── agents/
+│   └── autonomous.md      # autonomous agent（全自动任务调度）
+├── skills/
+│   ├── grilling/          # 需求澄清 skill（ stress-test 计划/决策）
+│   ├── mew-spec/          # spec 驱动开发 skill
+│   └── project-resume-interview/  # 项目分析 + 面试素材 skill
+└── README.md
+```
+
+---
+
+## 各组件说明
+
+### AGENTS.md（全局指令）
+
+注入方式：`opencode.json` 的 `instructions` 字段。
+
+内容：全局行为规则（中文回复、子任务优先、回复结尾固定格式等）。
+
+更新方式：修改本文件 → commit → push → 所有设备下次会话自动生效。
+
+### skills/（技能）
+
+通过 `npx skills add sunboyHY/aiconfig --skill <name> -g -y` 安装。
+
+每个技能是一个独立的 SKILL.md，定义触发条件和执行流程。
+
+当前技能：
+
+| 技能 | 用途 |
+|------|------|
+| `grilling` | 对计划/决策/想法进行压力测试，追问细节直至双方理解一致 |
+| `mew-spec` | Spec 驱动开发：需求澄清 → spec → plan → tasks → checklist |
+| `project-resume-interview` | 分析真实项目，产出简历项目经历 + 面试问答素材 |
+
+### agents/（自定义 Agent）
+
+autonomous agent 是一个 primary agent，配置在 `~/.config/opencode/agents/` 目录下。
+
+用途：全自动任务调度。读取 PLAN.md → 分解为细粒度任务 → 逐个派发给子 agent 执行 → 进度写入 AUTONOMOUS_LOG.md。
+
+使用方式：
+
+```bash
+/autonomous <任务文件路径>
+```
+
+---
+
+## 维护指南
 
 ### 添加新技能
 
-在 `skills/` 下创建目录 + `SKILL.md`，结构如下：
+1. 在 `skills/` 下创建目录，包含 `SKILL.md`
+2. 添加可选的 `assets/`、`references/`、`scripts/`
+3. Commit + push
+4. 其他设备执行 `npx skills add` 安装
 
-```
-skills/
-  my-skill/
-    SKILL.md          # 必需，含 YAML frontmatter (name, description)
-    assets/           # 可选：模板、图标等
-    references/       # 可选：参考文档
-    scripts/          # 可选：可执行脚本
-```
+### 添加新 Agent
 
-`SKILL.md` 示例：
+1. 在 `agents/` 下创建 `.md` 文件
+2. 在 README 的「安装代理」表中添加对应平台的 copy 命令
+3. Commit + push
+4. 其他设备重新执行第 4 步
 
-```markdown
+### 更新 AGENTS.md
+
+直接编辑 `AGENTS.md`，commit + push 即可。其他设备无需操作，下次会话自动生效。
+
 ---
-name: my-skill
-description: "Use when the user asks about X — one sentence triggering condition."
----
 
-# My Skill
+## 故障排查
 
-Instructions for the agent to follow.
-```
-
-提交推送后，其他设备即可通过 `npx skills add` 安装。
-
-## 代理（Agents）
-
-本仓库的 `agents/` 目录存放自定义 primary agent 配置。
-
-### 安装方式
-
-将对应文件复制到 opencode 的 agents 目录：
-
-```bash
-# macOS / Linux
-cp agents/autonomous.md ~/.config/opencode/agents/
-
-# Windows PowerShell
-Copy-Item -Path agents\autonomous.md -Destination ~\.config\opencode\agents\ -Force
-```
-
-## 优先级
-
-- **AGENTS.md**：全局基线，通过 `instructions` URL 注入所有会话
-- **skills/**：通过 `npx skills add -g` 安装到 `~/.agents/skills/`，opencode 自动发现
-- **agents/**：复制到 `~/.config/opencode/agents/`，opencode 自动识别
-- 项目根目录的 `AGENTS.md` 或 `.opencode/` 可作为项目级补充
+| 问题 | 排查步骤 |
+|------|---------|
+| AGENTS.md 规则未生效 | 检查 opencode.json 中 `instructions` URL 是否正确 |
+| 技能未加载 | 运行 `npx skills add sunboyHY/aiconfig --list` 确认已安装 |
+| Agent 未识别 | 检查 `~/.config/opencode/agents/` 目录下是否有对应 .md 文件 |
+| 权限不足 | 检查 opencode.json 的 `permission` 配置 |
