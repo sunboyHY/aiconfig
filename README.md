@@ -130,7 +130,21 @@ aiconfig/
 
 模型分配：
 - **编排脚本模型**：TUI 当前选中的模型（build agent）
-- **子 agent 模型**：在编排脚本中逐个指定，见下方模型表
+- **子 agent 模型**：在编排脚本中通过 `models()` 动态发现可用模型后指定，见下方示例
+
+```javascript
+// 编排脚本中动态获取可用模型
+const available = models();
+// available = [{ providerID: 'doubao', modelID: 'deepseek-v4-pro', available: true }, ...]
+
+// 选择不同模型执行不同视角
+const reviews = await parallel([
+  () => agent('安全角度', { model: { providerID: 'doubao', modelID: 'deepseek-v4-pro' } }),
+  () => agent('性能角度', { model: { providerID: 'stepfun', modelID: 'step-3.7-flash' } }),
+]);
+```
+
+如果模型失效（API key 过期等），`models()` 会自动标记为 `available: false`，不会出现在列表中。插件启动时自动读取 opencode.json 中的配置，无需手动同步模型列表。
 
 详细安装步骤见下方第 5 步。
 
