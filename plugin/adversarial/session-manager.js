@@ -11,9 +11,18 @@ export class SessionManager {
       directory: this.directory,
     });
 
-    const response = await this.client.session.prompt(session.id, {
-      prompt,
-    });
+    const promptOpts = { prompt };
+    if (opts.model) {
+      promptOpts.model = {
+        providerID: opts.model.providerID,
+        modelID: opts.model.modelID,
+      };
+    }
+    if (opts.agent) {
+      promptOpts.agent = opts.agent;
+    }
+
+    const response = await this.client.session.prompt(session.id, promptOpts);
 
     const text = this._extractText(response);
 
