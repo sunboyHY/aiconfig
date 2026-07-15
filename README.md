@@ -61,8 +61,25 @@ Instructions for the agent to follow.
 
 提交推送后，其他设备即可通过 `npx skills add` 安装。
 
+## 代理（Agents）
+
+本仓库的 `agents/` 目录存放自定义 primary agent 配置。
+
+### 安装方式
+
+将对应文件复制到 opencode 的 agents 目录：
+
+```bash
+# macOS / Linux
+cp agents/autonomous.md ~/.config/opencode/agents/
+
+# Windows PowerShell
+Copy-Item -Path agents\autonomous.md -Destination ~\.config\opencode\agents\ -Force
+```
+
 ## 优先级
 
 - **AGENTS.md**：全局基线，通过 `instructions` URL 注入所有会话
 - **skills/**：通过 `npx skills add -g` 安装到 `~/.agents/skills/`，opencode 自动发现
+- **agents/**：复制到 `~/.config/opencode/agents/`，opencode 自动识别
 - 项目根目录的 `AGENTS.md` 或 `.opencode/` 可作为项目级补充
